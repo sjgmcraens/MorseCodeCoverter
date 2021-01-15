@@ -1,0 +1,40 @@
+﻿<Window x:Class="MorseCodeCoverter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MorseCodeCoverter"
+        mc:Ignorable="d"
+        Title="MorseCodeConverter" Height="450" Width="800">
+    <Grid x:Name="Grid_Main" Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel x:Name="StackPanel_Center"
+                    Grid.Column="1"
+                    Height="auto"
+                    VerticalAlignment="Center">
+            
+            <Button Height="30" Margin="5" x:Name="Button_Convert" Click="Button_Convert_Click">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Convert" VerticalAlignment="Center"/>
+                    <Polygon Points="0,12 0,0 10,6" Fill="Black" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+            <Button Height="30" Margin="5" Name="Button_Mode" Content="Mode: •−" Click="Button_Mode_Click"/>
+            <Button Height="30" Margin="5" Name="Button_Spacing" Content="Spacing: &quot;   &quot;" Click="Button_Spacing_Click"/>
+            <Button Height="30" Margin="5" Content="About"/>
+            <Button Height="30" Margin="5" Content="Changelog"/>
+
+
+        </StackPanel>
+
+        <TextBox x:Name="TextBox_Left" Margin="10" Grid.Column="0" TextWrapping="Wrap" Text="[Your text here]"/>
+        <TextBox x:Name="TextBox_Right" Margin="10" Grid.Column="2" TextWrapping="Wrap"/>
+        
+    </Grid>
+</Window>
