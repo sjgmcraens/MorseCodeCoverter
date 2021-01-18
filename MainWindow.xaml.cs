@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Media;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,22 +30,37 @@ namespace MorseCodeCoverter
 
         private void Button_Convert_Click(object sender, RoutedEventArgs e)
         {
-            TextBox_Right.Text = TextBox_Left.Text.ToMorseCode();
+            TextBox_Right.Text = TextBox_Left.Text.ToMorse();
         }
 
-
-        private void Button_Mode_Click(object sender, RoutedEventArgs e)
+        private void TextBox_Conversion_Dash_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Morse.SwitchConvertMode();
-            Button_Mode.Content = "Mode: " + Morse.GetConvertModeString(); 
-            Button_Convert_Click(null, null);
+            Morse.dash = TextBox_Conversion_Dash.Text;
         }
 
-        private void Button_Spacing_Click(object sender, RoutedEventArgs e)
+        private void TextBox_Conversion_Dot_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Morse.SwitchSpacingMode();
-            Button_Spacing.Content = "Spacing: " + Morse.GetSpacingModeString();
-            Button_Convert_Click(null, null);
+            Morse.dot = TextBox_Conversion_Dot.Text;
+        }
+
+        private void TextBox_Spacing_Morse_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Morse.morseSpace = TextBox_Spacing_Morse.Text;
+        }
+
+        private void TextBox_Spacing_Chars_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Morse.charSpace = TextBox_Spacing_Chars.Text;
+        }
+
+        private void TextBox_Spacing_Words_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Morse.wordSpace = TextBox_Spacing_Words.Text;
+        }
+
+        private void Button_Play_Click(object sender, RoutedEventArgs e)
+        {
+            Morse.PlayMorse(TextBox_Left.Text);
         }
     }
 }
@@ -62,94 +78,96 @@ namespace ExtensionMethods
         // The space between letters is three units.
         // The space between words is seven units.
 
-        static string LetterSpace = "   ", WordSpace = "       ";
-
-        static Dictionary<char, string> DotDashConversion = new Dictionary<char, string>()
+        // False == Dot == "•" && True == Dash == "−"
+        static Dictionary<char, bool[]> ConversionDict = new Dictionary<char, bool[]>()
         {
-            {'a', "• −"},
-            {'b', "− • • •"},
-            {'c', "− • − •"},
-            {'d', "− • •"},
-            {'e', "•"},
-            {'f', "• • − •"},
-            {'g', "− − •"},
-            {'h', "• • • •"},
-            {'i', "• •"},
-            {'j', "• − − −"},
-            {'k', "− • −"},
-            {'l', "• − • •"},
-            {'m', "− −"},
-            {'n', "− •"},
-            {'o', "− − −"},
-            {'p', "• − − •"},
-            {'q', "− − • −"},
-            {'r', "• − •"},
-            {'s', "• • •"},
-            {'t', "−"},
-            {'u', "• • −"},
-            {'v', "• • • −"},
-            {'w', "• − −"},
-            {'x', "− • • −"},
-            {'y', "− • − −"},
-            {'z', "− − • •"},
-            {'1', "• − − − −"},
-            {'2', "• • − − −"},
-            {'3', "• • • − −"},
-            {'4', "• • • • −"},
-            {'5', "• • • • •"},
-            {'6', "− • • • •"},
-            {'7', "− − • • •"},
-            {'8', "− − − • •"},
-            {'9', "− − − − •"},
-            {'0', "− − − − −"}
+            {'a', new bool[] {false, true } },
+            {'b', new bool[] {true , false, false, false} },
+            {'c', new bool[] {true , false, true , false} },
+            {'d', new bool[] {true , false, false} },
+            {'e', new bool[] {false} },
+            {'f', new bool[] {false, false, true , false} },
+            {'g', new bool[] {true , true , false } },
+            {'h', new bool[] {false, false, false, false, } },
+            {'i', new bool[] {false, false} },
+            {'j', new bool[] {false, true , true , true } },
+            {'k', new bool[] {true , false, true } },
+            {'l', new bool[] {false, true , false, false} },
+            {'m', new bool[] {true , true } },
+            {'n', new bool[] {true , false} },
+            {'o', new bool[] {true , false} },
+            {'p', new bool[] {false, true , true , false} },
+            {'q', new bool[] {true , true , false, true } },
+            {'r', new bool[] {false, true , false} },
+            {'s', new bool[] {false, false, false} },
+            {'t', new bool[] {true } },
+            {'u', new bool[] {false, false, true } },
+            {'v', new bool[] {false, false, false, true } },
+            {'w', new bool[] {false, true , true } },
+            {'x', new bool[] {true , false, false, true } },
+            {'y', new bool[] {true , false, true , true } },
+            {'z', new bool[] {true , true , false, false} },
+            {'1', new bool[] {false, true , true , true , true } },
+            {'2', new bool[] {false, false, true , true , true } },
+            {'3', new bool[] {false, false, false, true , true } },
+            {'4', new bool[] {false, false, false, false, true } },
+            {'5', new bool[] {false, false, false, false, false} },
+            {'6', new bool[] {true , false, false, false, false} },
+            {'7', new bool[] {true , true , false, false, false} },
+            {'8', new bool[] {true , true , true , false, false} },
+            {'9', new bool[] {true , true , true , true , false} },
+            {'0', new bool[] {true , true , true , true , true } }
         };
 
-        static Dictionary<char, string> CurrentConversion = DotDashConversion;
+        public static string dot = "•", dash = "−";
+        public static string morseSpace = "", charSpace = " ", wordSpace = "   ";
 
-        public static string convertMode = "DotDash";
-        public static byte letterSpacing = 0;
-        public static string letterSpace = "";
-        public static byte wordSpacing = 1;
-        public static string wordSpace = " ";
-
-        public static string ToMorseCode(this string str)
+        public static string ToMorse(this string str)
         {
             /// This method returns the string converted into international morse code.
             /// It supports the 26 English letters and 10 numerals.
             /// Unknown characters become "*".
             /// Dots => "•", Dash => "−".
             /// See also: static class Morse.
-
-            // Convert string to lowercase
-            string rStr = "";
+            /// 
+            
+            // Preventing errors ...
+            if(str == "")
+            {
+                return "";
+            }
 
             //
             bool someNotConverted = false;
 
+            //
+            List<string> words = new List<string>();
+
             // For each word in str
             foreach (string word in str.ToLower().Trim().Split(' '))
             {
-                string w = "";
-                // For each caracter in word
+                List<string> chars = new List<string>();
+
+                // For each char in word
                 foreach (char c in word)
                 {
                     // KeyNotFound
-                    if (!Morse.DotDashConversion.ContainsKey(c))
+                    if (!Morse.ConversionDict.ContainsKey(c))
                     {
-                        w += c;
+                        chars.Add(c.ToString());
                         someNotConverted = true;
                     }
                     else
                     {
-                        w += Morse.CurrentConversion[c];
+
+                        chars.Add(c.ToMorse());
                     }
-                    w += LetterSpace;
                 }
                 // Add word
-                rStr += w;
-                rStr += WordSpace;
+                words.Add(chars.Aggregate((i, j) => i + charSpace + j));
             }
-            rStr = rStr.Trim();
+            // Join words
+            string rStr = words.Aggregate((i, j) => i + wordSpace + j);
 
             if (someNotConverted)
             {
@@ -158,70 +176,126 @@ namespace ExtensionMethods
 
             return rStr;
         }
+        static string ToMorse(this char c)
+        {
+            List<string> r = new List<string>();
+            foreach (bool isDash in ConversionDict[c])
+            {
+                if (isDash)
+                {
+                    r.Add(dash);
+                }
+                else
+                {
+                    r.Add(dot);
+                }
+            }
+            return r.Aggregate((i, j) => i + morseSpace + j);
+        }
 
-        public static Dictionary<char, string> BinairyConversion = new Dictionary<char, string>();
+        // Media player
+        private static SoundPlayer SP_Biep = new SoundPlayer();
+        private static SoundPlayer SP_Boop = new SoundPlayer();
+
+        // Playlist
+        private static List<byte> PlayList;
+        private static int PlayListIndex;
+
+        public static void PlayMorse(this string str)
+        {
+            /// Playlist is a list of bytes
+            /// 
+            /// 0 == Dot (Beep) duration is 145ms
+            /// 1 == Dash (Boop) duration is 435ms (3 x 145)
+            /// 2 == 145ms pauze (between dots and dashes)
+            /// 3 == 435ms pauze (between letters)
+            /// 4 == 1015ms pauze (between words)
+
+            // Reset playlist
+            PlayList = new List<byte>();
+            PlayListIndex = 0;
+
+            string[] words = str.ToLower().Trim().Split(' ');
+
+            // For each word in str
+            for (int i=0; i<words.Length; i++)
+            {
+                char[] chars = words[i].ToCharArray();
+
+                // For each char in word
+                for (int j=0; j<chars.Length; j++)
+                {
+                    bool[] b = ConversionDict[chars[j]];
+
+                    // For each morse char in c
+                    for (int k=0; k<b.Length; k++)
+                    {
+                        // Add morse char to playlist
+                        if (b[k])
+                        {
+                            PlayList.Add(1);
+                        }
+                        else
+                        {
+                            PlayList.Add(0);
+                        }
+
+                        // Add space
+                        if (k != b.Length - 1)
+                        {
+                            PlayList.Add(2);
+                        }
+                    }
+                    // Add space
+                    if (j != chars.Length - 1)
+                    {
+                        PlayList.Add(3);
+                    }
+                }
+                // Add space
+                if (i != words.Length - 1)
+                {
+                    PlayList.Add(4);
+                }
+            }
+
+
+
+
+
+
+
+            // Play first sound
+            
+            MP.Play();
+        }
+
 
         static Morse()
         {
-            // Compute BinairyConversion dictionary from DotDashConversion (just to save me some time)
-            foreach (KeyValuePair<char, string> p in DotDashConversion)
-            {
-                BinairyConversion.Add(p.Key, p.Value.Replace('•', '0').Replace('−', '1'));
-            }
+            MP.MediaEnded += MediaEndedEventHandler;
         }
 
-        public static void SwitchConvertMode()
+
+        static Uri Beep = new Uri(@"Beep.wav");
+        static Uri Boop = new Uri(@"Boop.wav");
+
+        static void MediaEndedEventHandler(object sender, EventArgs e)
         {
-            if (convertMode == "DotDash")
+            if (PlayListIndex >= PlayList.Count)
             {
-                convertMode = "Binairy";
-                CurrentConversion = BinairyConversion;
+                return;
             }
-            else
+
+            if (PlayList[PlayListIndex] == 0)
             {
-                convertMode = "DotDash";
-                CurrentConversion = DotDashConversion;
+                SP.Play()
             }
+            MP.Play();
+
+            MP.Play(PlayList[PlayListIndex])
+            PlayListIndex++;
         }
 
-        public static string GetConvertModeString()
-        {
-            if (convertMode == "DotDash")
-            {
-                return "•−";
-            }
-            else
-            {
-                return "01";
-            }
-        }
-
-        public static void SwitchLetterSpacingMode()
-        {
-            if (letterSpacing < 3)
-            {
-                letterSpacing++;
-                LetterSpace = "".PadRight(letterSpacing, ' ');
-            }
-            else
-            {
-                letterSpacing = 0;
-                LetterSpace = "";
-            }
-        }
-
-        public static void SwitchWordSpacingMode()
-        {
-            if (wordSpacing < 7)
-            {
-                wordSpacing++;
-                wordSpace = "".PadRight(wordSpacing, ' ');
-            }
-            else
-            {
-                wordSpacing = 0;
-                wordSpace = "";
-            }
-        }
     }
 }

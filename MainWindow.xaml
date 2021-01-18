@@ -8,9 +8,9 @@
         Title="MorseCodeConverter" Height="450" Width="800">
     <Grid x:Name="Grid_Main" Margin="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <StackPanel x:Name="StackPanel_Center"
@@ -18,23 +18,173 @@
                     Height="auto"
                     VerticalAlignment="Center">
             
-            <Button Height="30" Margin="5" x:Name="Button_Convert" Click="Button_Convert_Click">
-                <StackPanel Orientation="Horizontal">
+            <Button Height="30" Margin="5" x:Name="Button_Convert" 
+                    Click="Button_Convert_Click"
+                    BorderThickness="2"
+                    BorderBrush="Black">
+                <StackPanel Orientation="Horizontal" Margin="5">
                     <TextBlock Text="Convert" VerticalAlignment="Center"/>
                     <Polygon Points="0,12 0,0 10,6" Fill="Black" Margin="5,0,0,0" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
 
-            <Button Height="30" Margin="5" Name="Button_Mode" Content="Mode: •−" Click="Button_Mode_Click"/>
-            <Button Height="30" Margin="5" Name="Button_Spacing" Content="Spacing: &quot;   &quot;" Click="Button_Spacing_Click"/>
+
+            <Button Height="auto" Margin="5" x:Name="Button_Play" 
+                    Click="Button_Play_Click"
+                    BorderThickness="2"
+                    BorderBrush="Black">
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Play" VerticalAlignment="Center"/>
+                    <Polygon Points="0,12 0,0 10,6" Fill="Black" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+
+            <Border Height="auto" Margin="5"
+                    BorderBrush="Black"
+                    Background="LightGray"
+                    BorderThickness="2">
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Conversion:" HorizontalAlignment="Center" FontWeight="Bold"
+                               Grid.ColumnSpan="2"
+                               Margin="0,0,0,5"/>
+                    <TextBlock Text="Dot: "
+                               Grid.Row="1"/>
+                    <TextBlock Text="Dash: "
+                               Grid.Row="2"/>
+                    
+                    <TextBox Text="•" Name="TextBox_Conversion_Dot" 
+                             TextChanged="TextBox_Conversion_Dot_TextChanged"
+                             Grid.Row="1" Grid.Column="1"/>
+                    <TextBox Text="−" Name="TextBox_Conversion_Dash"
+                             TextChanged="TextBox_Conversion_Dash_TextChanged"
+                             Grid.Row="2" Grid.Column="1"/>
+
+                </Grid>
+
+
+            </Border>
+
+            <Border Height="auto" Margin="5"
+                    BorderBrush="Black"
+                    Background="LightGray"
+                    BorderThickness="2">
+                <Grid Margin="5" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Spacing:" 
+                               HorizontalAlignment="Center" 
+                               FontWeight="Bold"
+                               Grid.ColumnSpan="2"
+                               Margin="0,0,0,5"/>
+                    
+                    <TextBlock Text="Morse: "
+                               Grid.Row="1"
+                               Grid.Column="0"/>
+                    
+                    <TextBlock Text="Chars: "
+                               Grid.Row="2"
+                               Grid.Column="0"/>
+                    
+                    <TextBlock Text="Words: "
+                               Grid.Row="3"
+                               Grid.Column="0"/>
+                    
+                    <TextBox Text="" Name="TextBox_Spacing_Morse" 
+                             TextChanged="TextBox_Spacing_Morse_TextChanged"
+                             Grid.Row="1" Grid.Column="1"/>
+
+                    <TextBox Text=" " Name="TextBox_Spacing_Chars" 
+                             TextChanged="TextBox_Spacing_Chars_TextChanged"
+                             Grid.Row="2" Grid.Column="1"/>
+
+                    <TextBox Text="   " Name="TextBox_Spacing_Words" 
+                             TextChanged="TextBox_Spacing_Words_TextChanged"
+                             Grid.Row="3" Grid.Column="1"/>
+                </Grid>
+            </Border>
+
+            
+
             <Button Height="30" Margin="5" Content="About"/>
             <Button Height="30" Margin="5" Content="Changelog"/>
 
 
         </StackPanel>
 
-        <TextBox x:Name="TextBox_Left" Margin="10" Grid.Column="0" TextWrapping="Wrap" Text="[Your text here]"/>
-        <TextBox x:Name="TextBox_Right" Margin="10" Grid.Column="2" TextWrapping="Wrap"/>
+
+        <Border Grid.Column="0" BorderBrush="Black" Margin="10" VerticalAlignment="Stretch"
+                Background="LightGray"
+                BorderThickness="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Text="Plain text"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Margin="10"/>
+
+                <TextBox x:Name="TextBox_Left"
+                         Grid.Row="1"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         Grid.Column="0" 
+                         TextWrapping="Wrap"
+                         VerticalAlignment="Stretch"
+                         Margin="10,0,10,10"
+                         Text="Your text here"
+                         Background="Transparent"/>
+            </Grid>
+        </Border>
         
+
+        <Border Grid.Column="2" BorderBrush="Black" Margin="10" VerticalAlignment="Stretch"
+                Background="LightGray"
+                BorderThickness="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Converted Morse Code"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Margin="10"/>
+                
+                <TextBox x:Name="TextBox_Right"
+                         Grid.Row="1"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         Grid.Column="0" 
+                         TextWrapping="Wrap"
+                         VerticalAlignment="Stretch"
+                         Margin="10,0,10,10"
+                         Background="Transparent"/>
+
+            </Grid>
+        </Border>
+        
+
     </Grid>
 </Window>
