@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{44E4D178-0A94-4469-A2B6-EBA6171A5D4E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>MorseCodeCoverter</RootNamespace>
-    <AssemblyName>MorseCodeCoverter</AssemblyName>
+    <RootNamespace>MorseCodeConverter</RootNamespace>
+    <AssemblyName>MorseCodeConverter</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -95,8 +95,15 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Biep.wav" />
-    <Content Include="Boop.wav" />
+    <EmbeddedResource Include="Beep.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Boop.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Boop.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

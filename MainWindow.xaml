@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MorseCodeCoverter"
         mc:Ignorable="d"
-        Title="MorseCodeConverter" Height="450" Width="800">
+        Title="MorseCodeConverter" Height="450" Width="800"
+        Background="DimGray">
     <Grid x:Name="Grid_Main" Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -13,17 +14,21 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+
+        
+        
+
         <StackPanel x:Name="StackPanel_Center"
                     Grid.Column="1"
                     Height="auto"
                     VerticalAlignment="Center">
             
-            <Button Height="30" Margin="5" x:Name="Button_Convert" 
+            <Button Height="auto" Margin="5" x:Name="Button_Convert" 
                     Click="Button_Convert_Click"
                     BorderThickness="2"
                     BorderBrush="Black">
                 <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="Convert" VerticalAlignment="Center"/>
+                    <TextBlock Text="Convert" VerticalAlignment="Center" FontWeight="Bold"/>
                     <Polygon Points="0,12 0,0 10,6" Fill="Black" Margin="5,0,0,0" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
@@ -34,7 +39,7 @@
                     BorderThickness="2"
                     BorderBrush="Black">
                 <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="Play" VerticalAlignment="Center"/>
+                    <TextBlock Text="Play" VerticalAlignment="Center" FontWeight="Bold"/>
                     <Polygon Points="0,12 0,0 10,6" Fill="Black" Margin="5,0,0,0" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
@@ -122,10 +127,19 @@
                 </Grid>
             </Border>
 
-            
+            <Button Height="auto" Margin="5" MinHeight="30" x:Name="Button_About"
+                    BorderThickness="2"
+                    BorderBrush="Black"
+                    Content="About"
+                    FontWeight="Bold"
+                    Click="Button_About_Click"/>
 
-            <Button Height="30" Margin="5" Content="About"/>
-            <Button Height="30" Margin="5" Content="Changelog"/>
+            <Button Height="auto" Margin="5" MinHeight="30" x:Name="Button_Changelog"
+                    BorderThickness="2"
+                    BorderBrush="Black"
+                    Content="Changelog"
+                    FontWeight="Bold"
+                    Click="Button_Changelog_Click"/>
 
 
         </StackPanel>
@@ -151,10 +165,12 @@
                          ScrollViewer.VerticalScrollBarVisibility="Auto"
                          Grid.Column="0" 
                          TextWrapping="Wrap"
+                         AcceptsReturn="True"
                          VerticalAlignment="Stretch"
                          Margin="10,0,10,10"
                          Text="Your text here"
-                         Background="Transparent"/>
+                         Background="Transparent"
+                         FontSize="15"/>
             </Grid>
         </Border>
         
@@ -180,11 +196,90 @@
                          TextWrapping="Wrap"
                          VerticalAlignment="Stretch"
                          Margin="10,0,10,10"
-                         Background="Transparent"/>
+                         Background="Transparent"
+                         FontSize="15"/>
 
             </Grid>
         </Border>
-        
+
+        <Border Background="#80D3D3D3"
+                Grid.ColumnSpan="3"
+                Name="Border_About"
+                Visibility="Hidden">
+            <Border HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Height="auto"
+                    Width="auto"
+                    Background="LightGray"
+                    BorderThickness="2"
+                    BorderBrush="Black">
+                <StackPanel Margin="10">
+                    <TextBlock Text="MorseCodeConverter by Sebastiaan Craens" 
+                               FontWeight="Bold" 
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,10"/>
+                    <TextBlock Text="This application converts plain text into morse code." 
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,20"/>
+                    <Button BorderThickness="2"
+                            BorderBrush="Black"
+                            Width="auto"
+                            HorizontalAlignment="Center"
+                            Name="Button_CloseAbout"
+                            Click="Button_CloseAbout_Click">
+                        <TextBlock Text="Close"
+                                   Margin="5,0,5,0"/>
+                    </Button>
+
+                </StackPanel>
+                
+            </Border>
+        </Border>
+
+        <Border Background="#80D3D3D3"
+                Grid.ColumnSpan="3"
+                Name="Border_Changelog"
+                Visibility="Hidden">
+            <Border HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Height="auto"
+                    Width="auto"
+                    Background="LightGray"
+                    BorderThickness="2"
+                    BorderBrush="Black">
+                <StackPanel Margin="10">
+                    <TextBlock Text="Changelog"
+                               FontWeight="Bold" 
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,10"/>
+                    <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="21-1-2021:" 
+                                   HorizontalAlignment="Center"
+                                   Margin="5"/>
+                        <TextBlock Text="1.0 released"
+                                   Grid.Column="1"
+                                   Margin="5"/>
+                    </Grid>
+                    
+                    <Button BorderThickness="2"
+                            BorderBrush="Black"
+                            Width="auto"
+                            HorizontalAlignment="Center"
+                            Name="Button_CloseChangelog"
+                            Click="Button_CloseChangelog_Click">
+                        <TextBlock Text="Close"
+                                   Margin="5,0,5,0"/>
+                    </Button>
+
+                </StackPanel>
+
+            </Border>
+        </Border>
 
     </Grid>
 </Window>
